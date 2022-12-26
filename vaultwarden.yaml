@@ -28,7 +28,10 @@ spec:
           image: vaultwarden/server:latest
           env:
             - name: ADMIN_TOKEN
-              value: <Secure-Token> # Generate with 'openssl rand -base64 48'
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-admin
+                  key: admin-token
             - name: WEBSOCKET_ENABLED
               value: "true"
           securityContext:
@@ -138,3 +141,15 @@ spec:
               number: 3012
         path: /notifications/hub
         pathType: Exact
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vaultwarden-admin
+  namespace: vaultwarden
+  labels:
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+type: Opaque
+stringData:
+  admin-token: <Secure-Admin-Token> # Generate with 'openssl rand -base64 48'
