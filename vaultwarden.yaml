@@ -46,7 +46,7 @@ metadata:
     app.kubernetes.io/name: vaultwarden
     app.kubernetes.io/instance: vaultwarden  
 spec:
-#  storageClassName: nfs-client
+#  storageClassName: nfs-client # Needs to be specified if no default class is set
   accessModes:
     - ReadWriteOnce
   resources:
@@ -85,7 +85,7 @@ metadata:
     app.kubernetes.io/name: vaultwarden
     app.kubernetes.io/instance: vaultwarden
 spec:
-#  ingressClassName: nginx
+#  ingressClassName: nginx # Needs to be specified if no default class is set
   tls:
   - hosts:
     - <My-Vault-Hostname>
@@ -123,7 +123,7 @@ metadata:
     app.kubernetes.io/name: vaultwarden
     app.kubernetes.io/instance: vaultwarden
 spec:
-#  ingressClassName: nginx
+#  ingressClassName: nginx # Needs to be specified if no default class is set
   tls:
   - hosts:
     - <My-Vault-Hostname>
