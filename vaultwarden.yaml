@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden
+  namespace: vaultwarden
+  labels:
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vaultwarden
+      app.kubernetes.io/instance: vaultwarden
+  template:
+    metadata:
+      name: vaultwarden
+      labels:
+        app.kubernetes.io/name: vaultwarden
+        app.kubernetes.io/instance: vaultwarden
+    spec:
+      volumes:
+        - name: vaultwarden-pv-storage
+          persistentVolumeClaim:
+            claimName: vaultwarden-pv-claim
+      containers:
+        - name: vaultwarden
+          image: vaultwarden/server:latest
+          env:
+            - name: ADMIN_TOKEN
+              value: <Secure-Token> # Generate with 'openssl rand -base64 48'
+          securityContext:
+            privileged: false
+          volumeMounts:
+            - mountPath: "/data"
+              name: vaultwarden-pv-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vaultwarden-pv-claim
+  namespace: vaultwarden
+  labels:
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/instance: vaultwarden  
+spec:
+#  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vaultwarden
+  namespace: vaultwarden
+  labels:
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+spec:
+  selector:
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vaultwarden
+  namespace: vaultwarden
+spec:
+#  ingressClassName: nginx
+  tls:
+  - hosts:
+    - <My-Vault-Hostname>
+  rules:
+  - host: <My-Vault-Hostname>
+    http:
+      paths:
+      - backend:
+          service:
+            name: vaultwarden
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
