@@ -75,6 +75,9 @@ kind: Ingress
 metadata:
   name: vaultwarden
   namespace: vaultwarden
+  labels:
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
 spec:
 #  ingressClassName: nginx
   tls:
