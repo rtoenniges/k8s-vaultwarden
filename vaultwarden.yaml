@@ -39,6 +39,16 @@ spec:
           volumeMounts:
             - mountPath: "/data"
               name: vaultwarden-pv-storage
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 6
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
