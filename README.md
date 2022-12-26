@@ -2,5 +2,5 @@
 [Vaultwarden](https://github.com/dani-garcia/vaultwarden) deployment for Kubernetes Cluster
 
 ## Prerequisites
-- StorageClass
-- IngressClass
+- StorageClass - For persistent volume
+- IngressClass - To proxy http and websocket connection to same URL
