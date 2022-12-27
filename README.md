@@ -3,4 +3,4 @@
 
 ## Prerequisites
 - StorageClass - For persistent volume
-- IngressClass - To proxy http and websocket connection to same URL
+- IngressClass - Reverse proxy for http and websocket connection on the same URL
